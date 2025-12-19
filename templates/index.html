@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="chat-window">
+    <div id="messages" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; margin-bottom: 10px; padding: 10px;"></div>
+    <input id="username" type="text" placeholder="Your Name" value="User1">
+    <input id="user_input" type="text" placeholder="Type a message or /command..." style="width: 70%;">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    var socket = io();
+    var messages = document.getElementById('messages');
+
+    socket.on('chat_msg', function(data) {
+        messages.innerHTML += `<p><strong>${data.username}:</strong> ${data.msg}</p>`;
+        messages.scrollTop = messages.scrollHeight;
+    });
+
+    socket.on('system_msg', function(data) {
+        messages.innerHTML += `<p style="color: blue;"><em>${data.msg}</em></p>`;
+    });
+
+    socket.on('change_name', function(data) {
+        document.getElementById('username').value = data.new_name;
+    });
+
+    function sendMessage() {
+        var msgInput = document.getElementById('user_input');
+        var user = document.getElementById('username').value;
+        socket.emit('message', {msg: msgInput.value, username: user});
+        msgInput.value = '';
+    }
+
+    // Allow "Enter" key to send
+    document.getElementById('user_input').addEventListener("keyup", function(event) {
+        if (event.key === "Enter") sendMessage();
+    });
+</script>
+{% endblock %}
