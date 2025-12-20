@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="ds-header">
+    Chat Room {{ room_id }}
+</div>
+
+<div id="messages" class="chat-screen">
+    <div style="color: blue; text-align: center;">-- Connected to Room {{ room_id }} --</div>
+</div>
+
+<div class="input-area-ds">
+    <input id="user_input" type="text" placeholder="Tap to write..." autocomplete="off">
+    <button class="btn-ds" onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    var socket = io();
+    var room_id = "{{ room_id }}";
+    var messages = document.getElementById('messages');
+
+    socket.on('connect', function() {
+        var user = localStorage.getItem('chat_name') || 'Guest';
+        socket.emit('join', {username: user, room: room_id});
+    });
+
+    socket.on('chat_msg', function(data) {
+        // Calculate latency (Current Time - Server Time)
+        // Note: This is roughly the time from Server -> Client
+        // For a more accurate "Ping", we'd send a timestamp from client first.
+        
+        let clientTime = Date.now() / 1000;
+        let latency = Math.round((clientTime - data.server_time) * 1000);
+        if (latency < 0) latency = 0; // Prevent weird clock skew negatives
+
+        messages.innerHTML += `
+            <div class="msg-line">
+                <span class="msg-name" style="background:${data.color || '#000'}">
+                    ${data.username}
+                </span> 
+                <span style="color: black;">${data.msg}</span>
+                <span style="color: #888; font-size: 0.8em; margin-left: auto;">${latency}ms</span>
+            </div>`;
+        messages.scrollTop = messages.scrollHeight;
+    });
+
+    socket.on('system_msg', function(data) {
+        messages.innerHTML += `<div style="color: blue; font-style: italic; border-bottom:1px dotted #ccc;">${data.msg}</div>`;
+    });
+
+    function sendMessage() {
+        var msgInput = document.getElementById('user_input');
+        var user = localStorage.getItem('chat_name') || 'Guest';
+        var color = localStorage.getItem('chat_color') || '#000000';
+        
+        if(msgInput.value.trim() !== "") {
+            socket.emit('message', {
+                msg: msgInput.value, 
+                username: user, 
+                room: room_id, 
+                color: color
+            });
+            msgInput.value = '';
+        }
+    }
+    
+    document.getElementById('user_input').addEventListener("keyup", function(event) {
+        if (event.key === "Enter") sendMessage();
+    });
+</script>
+{% endblock %}

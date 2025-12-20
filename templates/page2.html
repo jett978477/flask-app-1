@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="settings-card">
+    <h2>User Settings</h2>
+    <hr>
+    
+    <div class="setting-item">
+        <label>Display Name:</label>
+        <input type="text" id="display_name" placeholder="User">
+    </div>
+
+    <div class="setting-item">
+        <label>Chat Color:</label>
+        <input type="color" id="chat_color" value="#000000">
+    </div>
+
+    <button onclick="saveSettings()" class="save-btn">Save Settings</button>
+    <a href="{{ url_for('index') }}" style="display:block; margin-top:10px; text-align:center;">Back to Dashboard</a>
+</div>
+
+<script>
+    // 1. Load existing settings from browser memory
+    document.getElementById('display_name').value = localStorage.getItem('chat_name') || 'User';
+    document.getElementById('chat_color').value = localStorage.getItem('chat_color') || '#000000';
+
+    // 2. Save settings to browser memory
+    function saveSettings() {
+        const name = document.getElementById('display_name').value;
+        const color = document.getElementById('chat_color').value;
+        
+        localStorage.setItem('chat_name', name);
+        localStorage.setItem('chat_color', color);
+        
+        alert('Settings Saved!');
+    }
+</script>
+{% endblock %}

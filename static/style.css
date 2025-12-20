@@ -1,0 +1,78 @@
+/* Import a pixel-style font */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+body {
+    background-color: #889098; /* DS Grey */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 100% 3px; /* Scanline effect */
+    font-family: 'VT323', monospace;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* --- THE NAV BAR --- */
+.navbar {
+    background: #687078;
+    color: white;
+    padding: 5px 10px;
+    border-bottom: 2px solid #303840;
+    font-size: 1.5rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+
+.nav-links a {
+    color: #FFF;
+    margin-left: 15px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+/* --- MAIN CONTAINER --- */
+.content {
+    margin-top: 60px;
+    width: 100%;
+    max-width: 500px; /* DS Screen width approx */
+}
+
+/* --- DASHBOARD (Room Selection) --- */
+.ds-header {
+    background: #68a0d0; /* DS Blue Header */
+    color: black;
+    text-align: center;
+    border: 2px solid #303840;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4);
+}
+
+.room-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+}
+
+.room-card {
+    background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
+    border: 2px solid #404040;
+    border-radius: 4px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    text-decoration: none;
+    color: black;
+    position: relative;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+.room-card:active

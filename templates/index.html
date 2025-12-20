@@ -1,39 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
-<div id="chat-window">
-    <div id="messages" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; margin-bottom: 10px; padding: 10px;"></div>
-    <input id="username" type="text" placeholder="Your Name" value="User1">
-    <input id="user_input" type="text" placeholder="Type a message or /command..." style="width: 70%;">
-    <button onclick="sendMessage()">Send</button>
+
+<div class="ds-header">
+    Choose a Chat Room to join.
 </div>
 
-<script>
-    var socket = io();
-    var messages = document.getElementById('messages');
+<div class="room-list">
+    <a href="{{ url_for('chat', room='a') }}" class="room-card">
+        <div class="room-icon">A</div>
+        <div class="room-info">Chat Room A</div>
+        <div class="room-stats">
+            👤 <span id="count-a">0</span>/16 
+            <div class="signal-icon"></div>
+        </div>
+    </a>
 
-    socket.on('chat_msg', function(data) {
-        messages.innerHTML += `<p><strong>${data.username}:</strong> ${data.msg}</p>`;
-        messages.scrollTop = messages.scrollHeight;
-    });
+    <a href="{{ url_for('chat', room='b') }}" class="room-card">
+        <div class="room-icon">B</div>
+        <div class="room-info">Chat Room B</div>
+        <div class="room-stats">
+            👤 <span id="count-b">0</span>/16
+            <div class="signal-icon"></div>
+        </div>
+    </a>
 
-    socket.on('system_msg', function(data) {
-        messages.innerHTML += `<p style="color: blue;"><em>${data.msg}</em></p>`;
-    });
+    <a href="{{ url_for('chat', room='c') }}" class="room-card">
+        <div class="room-icon">C</div>
+        <div class="room-info">Chat Room C</div>
+        <div class="room-stats">
+            👤 <span id="count-c">0</span>/16
+            <div class="signal-icon"></div>
+        </div>
+    </a>
 
-    socket.on('change_name', function(data) {
-        document.getElementById('username').value = data.new_name;
-    });
+    <a href="{{ url_for('chat', room='d') }}" class="room-card">
+        <div class="room-icon">D</div>
+        <div class="room-info">Chat Room D</div>
+        <div class="room-stats">
+            👤 <span id="count-d">0</span>/16
+            <div class="signal-icon"></div>
+        </div>
+    </a>
+</div>
 
-    function sendMessage() {
-        var msgInput = document.getElementById('user_input');
-        var user = document.getElementById('username').value;
-        socket.emit('message', {msg: msgInput.value, username: user});
-        msgInput.value = '';
-    }
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{{ url_for('settings') }}" class="btn-ds">⚙ Settings</a>
+</div>
 
-    // Allow "Enter" key to send
-    document.getElementById('user_input').addEventListener("keyup", function(event) {
-        if (event.key === "Enter") sendMessage();
-    });
-</script>
 {% endblock %}
